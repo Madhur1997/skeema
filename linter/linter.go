@@ -55,6 +55,18 @@ type ObjectChecker interface {
 	CheckObject(object interface{}, createStatement string, schema *tengo.Schema, opts Options) []Note
 }
 
+type CommonChecker func(object interface{}, createStatemenet string, schema *tengo.Schema, opts Options) []Note
+
+// Common CheckObject for rules applicable on tables, procedures and functions.
+func (cc CommonChecker) CheckObject(object interface{}, createStatement string, schema *tengo.Schema, opts Options) []Note {
+	_, isTable := object.(*tengo.Table)
+	_, isRoutine := object.(*tengo.Routine)
+	if isTable || isRoutine {
+		return cc(object, createStatement, schema, opts)
+	}
+	return nil
+}
+
 // TableChecker is a function that looks for problems in a table. It can return
 // any number of notes per table.
 type TableChecker func(table *tengo.Table, createStatement string, schema *tengo.Schema, opts Options) []Note
