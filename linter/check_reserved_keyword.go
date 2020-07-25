@@ -58,7 +58,7 @@ func init() {
 	RegisterRule(Rule{
 		CheckerFunc:     CommonChecker(reservedWordsChecker),
 		Name:            "reserved-words",
-		Description:     "Flag columns using reserved words",
+		Description:     "Flag identifiers being used as reserved words",
 		DefaultSeverity: SeverityWarning,
 	})
 }
