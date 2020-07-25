@@ -86,18 +86,6 @@ func tableReservedWordsChecker(table *tengo.Table, createStatement string, keywo
 		})
 	}
 
-	pk := table.PrimaryKey
-	if flavor, found := keywordToFlavor[pk.Name]; found {
-		re := regexp.MustCompile(fmt.Sprintf(`\b%s\b`, regexp.QuoteMeta(pk.Name)))
-		message := generateMessage( "Primary Key", pk.Name, table.Name, flavor.String() )
-		results = append(results, Note{
-			LineOffset: FindFirstLineOffset(re, createStatement),
-			Summary:    "Primary Key using a reserved keyword",
-			Message:    message,
-		})
-	}
-
-		
 	for _, col := range table.Columns {
 		if flavor, found := keywordToFlavor[col.Name]; found {
 			re := regexp.MustCompile(fmt.Sprintf(`\b%s\b`, regexp.QuoteMeta(col.Name)))
